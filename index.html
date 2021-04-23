@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<style>
+#con{width:100px;height;100px;margin:50px auto 0px;}
+	#con .conl{width:400px;height:500px;float:right;}
+</style>
+
+<head>
+    <!-- Copyright © 2020  -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .wrap {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            background-image:url(img/image.jpg);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .wrap-son {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 1;
+            background: rgba(59, 59, 59, 0.3);
+        }
+
+        .jumbotron {
+            background: rgba(255, 255, 255, 0);
+            color: #f5f5f5;
+        }
+
+        .love {
+            color: #ffffff;
+            margin: 0 20px;
+            line-height: 1.3;
+            font-weight: 300;
+        }
+
+        .hans-container {
+            position: fixed;
+            bottom: 0px;
+            width: 100%;
+            height: 120px;
+            z-index: 1;
+        }
+
+        .timer b {
+            font-size: 100px;
+        }
+
+        #s {
+            font-size: 100px;
+        }
+
+        #updatalove,
+        #to_comments {
+            margin: 0 10px;
+        }
+
+        .copy {
+            position: absolute;
+            bottom: 0;
+            color: #ffffff;
+            font-size: 12px;
+        }
+
+        /* 评论 */
+        .comment {
+            margin-top: 50px;
+            margin-bottom: 100px;
+        }
+        * {
+				margin: 0;
+				padding: 0;
+			}
+			}
+
+			.bg {
+				/* 歌词调整区 */
+				width: 100%;/* 歌词显示盒子宽 */
+				height: 30px;/* 歌词显示盒子高度，需要多显示几行歌词相应调大即可 */
+				/* background-color:#333; */ /* 歌词背景颜色 */
+				margin: 15px auto;
+				color: darkgrey;/* 歌词默认颜色,灰色 */
+				font-size: 12px;/* 歌词字体默认大小 */
+				overflow: hidden;
+				position: relative;
+				font-family: "微软雅黑";
+			}
+
+			.bg ul {
+				width: 100%;
+				position: absolute;
+				top: 20px;
+				left: -100px;
+				list-style: none;
+			}
+
+			.bg ul li {
+				width: 100%;
+				height: 30px;
+				line-height: 30px;
+				text-align: right;
+			}
+
+			.bg ul li.active {
+				/* 歌词高亮滚动区 */
+				color: white;/* 歌词滚动高亮颜色 */
+				/* font-weight: bold; *//* 文本加粗，不要，太丑了！ */
+				font-size: 20px; /* 歌词滚动行文字大小 */
+			}
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="wrap-son">
+            <div class="container-fluid">
+                <div class="box">
+                    <div class="jumbotron text-left">
+                        <h1>    猫咪已经单身</h1>
+                        <h3 class="timer">
+                            <div class="row">
+                                <b id="d"></b> 天  
+                            </div>
+							<div class="row">
+                                <b id="h"></b> 时
+                            </div>
+							<div class="row">
+                                <b id="m"></b> 分
+                            </div>
+                            <div class="row">
+                                <b id="s"></b> 秒
+                            </div>
+                        </h3>
+                        <p>
+                            <a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=uIqBjYuMgYqMgYD4ycmW29fV" id="to_comments" class="btn btn-primary btn-lg" role="button">快给他介绍个对象吧</a >
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <h4 class="love text-center"><span class="love-son"></span></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="con">
+	<div class="conl"></div>
+		<center> <audio autoplay="autoplay" src="img/01.mp3" controls></audio></center><!-- 这里修改播放器播放音乐 -->
+		<!-- 上边的autoplay="autoplay"属性为自动播放，不想让自动播放删去即可 -->
+		<div class="bg"></div><!-- 歌词显示盒子 -->
+		<script src="js/4.js"></script>
+ <script type="text/javascript">
+    $(function() {
+        function parseLyric(text) {
+            //按行分割歌词
+            let lyricArr = text.split('\n');
+            //console.log(lyricArr)//0: "[ti:七里香]" "[ar:周杰伦]"...
+            let result = []; //新建一个数组存放最后结果
+            //遍历分割后的歌词数组，将格式化后的时间节点，歌词填充到result数组
+            for (i = 0; i < lyricArr.length; i++) {
+                let playTimeArr = lyricArr[i].match(/\[\d{2}:\d{2}((\.|\:)\d{2})\]/g); //正则匹配播放时间
+                let lineLyric = "";
+                if (lyricArr[i].split(playTimeArr).length > 0) {
+                    lineLyric = lyricArr[i].split(playTimeArr);
+                }
+
+                if (playTimeArr != null) {
+                    for (let j = 0; j < playTimeArr.length; j++) {
+                        let time = playTimeArr[j].substring(1, playTimeArr[j].indexOf("]")).split(":");
+                        //数组填充
+                        result.push({
+                            time: (parseInt(time[0]) * 60 + parseFloat(time[1])).toFixed(4),
+                            content: String(lineLyric).substr(1)
+                        });
+                    }
+                }
+
+
+            }
+            return result;
+        }
+
+// 这里请按照格式放入相应歌词--开始
+// 格式可能看着很复杂,其实是根据lrc歌词文件换句前加入\n 换行符,然后删除多余空行.即可!
+        let text = "[00:00.20]美丽世界的孤儿 - 汪峰\n[00:33.47]别哭 我亲爱的人\n[00:36.46]我想我们会一起死去\n[00:41.46]别哭 夏日的玫瑰 一切已经过去\n[00:49.47]你看车辆穿梭 远处霓虹闪烁\n[00:57.37]这多像我们的梦\n[01:05.46]来吧 我亲爱的人\n[01:08.67]今夜我们在一起跳舞\n[01:13.32]来吧 孤独的野花 一切都会消失\n[01:21.47]你听窗外的夜莺 路上欢笑的人群\n[01:29.58]这多像我们的梦\n[01:36.68]哦哦哦嗬 别哭 亲爱的人\n[01:44.79]我们要坚强 我们要微笑\n[01:49.04]因为无论我们怎样\n[01:51.90]我们永远是这美丽世界 的孤儿\n[02:33.68]有时我感觉失落 感觉自己像一颗草\n[02:41.62]有时我陷入空虚 可我不知道为什么\n[02:49.53]时光流走了 而我依然在这儿\n[02:57.34]我已掉进深深的旋涡\n[03:05.74]宝贝看看远处 月亮从旷野上升起\n[03:13.64]求你再抱紧我 我感觉冷我感觉疼\n[03:21.69]你看车辆穿梭 就像在寻找什么\n[03:29.30]他们就像我们的命运 哦哦哦嗬 别哭亲爱的人\n[03:45.26]我们要坚强我们要微笑 因为无论我们怎样\n[03:52.31]我们永远是这美丽世界 的孤儿\n[04:32.73]哦 别哭亲爱的人 我们要坚强我们要微笑\n[04:45.27]因为无论我们怎样 我们永远是这美丽世界的孤儿";
+// 这里请按照格式放入相应歌词--结束
+        let audio = document.querySelector('audio');
+
+        let result = parseLyric(text); //执行lyc解析
+
+
+        // 把生成的数据显示到界面上去
+        let $ul = $("<ul></ul>");
+        for (let i = 0; i < result.length; i++) {
+            let $li = $("<li></li>").text(result[i].content);
+            $ul.append($li);
+        }
+        $(".bg").append($ul);
+
+        let lineNo = 0; // 当前行歌词
+        let preLine =1; // 当播放6行后开始滚动歌词
+        let lineHeight = -30; // 每次滚动的距离
+
+        // 滚动播放 歌词高亮  增加类名active
+        function highLight() {
+            let $li = $("li");
+            $li.eq(lineNo).addClass("active").siblings().removeClass("active");
+            if (lineNo > preLine) {
+                $ul.stop(true, true).animate({ top: (lineNo - preLine) * lineHeight });
+            }
+        }
+
+        highLight();
+
+        // 播放的时候不断渲染
+        audio.addEventListener("timeupdate", function() {
+            if (lineNo == result.length) return;
+            if ($("li").eq(0).hasClass("active")) {
+                $("ul").css("top", "0");
+            }
+            lineNo =getLineNo(audio.currentTime);
+            highLight();
+            lineNo++;
+        });
+
+        // 当快进或者倒退的时候，找到最近的后面那个result[i].time
+        function getLineNo(currentTime) {
+            if (currentTime >= parseFloat(result[lineNo].time)) {
+                // 快进
+                for (let i = result.length - 1; i >= lineNo; i--) {
+                    if (currentTime >= parseFloat(result[i].time)) {
+                        return i;
+                    }
+                }
+            } else {
+                // 后退
+                for (let i = 0; i <= lineNo; i++) {
+                    if (currentTime <= parseFloat(result[i].time)) {
+                        return i - 1;
+                    }
+                }
+            }
+        }
+
+        //播放结束自动回到开头
+        audio.addEventListener("ended", function() {
+            lineNo = 0;
+            highLight();
+            audio.play();
+            $("ul").css("top", "0");
+        });
+    });
+    </script>
+</div>
+    <!-- 计时器 -->
+    <script>
+        function timer() {
+            var start = new Date(2000, 10, 01, 00, 00, 00); // 2020.07.31 13:14:00
+            var t = new Date() - start;
+            var h = ~~(t / 1000 / 60 / 60 % 24);
+            if (h < 10) {
+                h = "0" + h;
+            }
+            var m = ~~(t / 1000 / 60 % 60);
+            if (m < 10) {
+                m = "0" + m;
+            }
+
+            var s = ~~(t / 1000 % 60);
+            if (s < 10) {
+                s = "0" + s;
+            }
+            document.getElementById('d').innerHTML = ~~(t / 1000 / 60 / 60 / 24);
+            document.getElementById('h').innerHTML = h;
+            document.getElementById('m').innerHTML = m;
+            document.getElementById('s').innerHTML = s;
+        }
+        timer();
+        setInterval(timer, 1000);
+    </script>
+
+    <script>
+        var oComments = document.querySelector("#comments");
+        var oCommentsTop = Math.round(oComments.offsetTop);
+        //运动框架
+        function move() {
+            // 1. 关闭开启定时器;
+            clearInterval(timer);
+            var timer = setInterval(function () {
+                // 2. 计算速度;
+                var iNow = document.documentElement.scrollTop || document.body.scrollTop; //100
+                iNow = Math.round(iNow);
+                var speed = (oCommentsTop - iNow) / 10;
+                // 3. 速度取整;
+                if (speed > 0) {
+                    speed = Math.ceil(speed);
+                } else {
+                    speed = Math.floor(speed);
+                }
+                document.documentElement.scrollTop = document.body.scrollTop = iNow + speed + 1;
+                // 4. 终止条件;
+                if (iNow >= oCommentsTop) {
+                    clearInterval(timer);
+                }
+            }, 20)
+        }
+
+        to_comments.onclick = move;
+    </script>
+
+
+    <!-- 底部波浪 -->
+    <script src="php/wave.php"></script>
+</body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
+    <link rel="icon" href="img/search.png" sizes="192x192" />
+    <link rel="apple-touch-icon-precomposed" href="img/search.png" />
+    <meta name="msapplication-TileImage" content="img/search.png" />
+    <link rel="shortcut icon" href="img/search.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="full-screen" content="yes">
+    <!--UC强制全屏-->
+    <meta name="browsermode" content="application">
+    <!--UC应用模式-->
+    <meta name="x5-fullscreen" content="true">
+    <!--QQ强制全屏-->
+    <meta name="x5-page-mode" content="app">
+    <!--QQ应用模式-->
+    <link href="fonts/embed.css" rel="stylesheet">
+    <link href="css/style.min.css" rel="stylesheet">
+    <script src="js/1.js"></script>
+    <script src="js/2.js"></script>
+    <script src="js/3.js"></script>
+    <script src="js/sou.min.js"></script>
+    <link rel="stylesheet" href="css/search.min.css" />
+    <!-- 百度统计 -->
+    <script>
+        console.log(
+      'color: yellow; background: red; font-size: 24px;font-size:100px'
+                )
+  </script>
+
+</head>
+<body>
+    <div id="menu"><i></i></div>
+    <div class="list closed">
+        <ul>
+        </ul>
+    </div>
+    <div id="content">
+        <div class="con">
+            <section class="sousuo col-xs-12">
+                <div class="search">
+                    <div class="search-box">
+                        <svg class="icon" id="search-icon" aria-hidden="true">
+                            <use xlink:href="#icon-baidu"></use>
+                        </svg>
+                        <input type="text" id="txt" class="search-input" autocomplete="off" autofocus="autofocus" placeholder="百度搜索" />
+                        <svg class="icon" aria-hidden="true" id="search-clear" style="display: none;">
+                            <use xlink:href="#icon-shanchu"></use>
+                        </svg>
+                    </div>
+                    <!-- 搜索热词 -->
+                    <div class="box search-hot-text" id="box" style="display: none;">
+                        <ul></ul>
+                    </div>
+                    <!-- 搜索引擎 -->
+                    <div class="search-engine" style="display: none;">
+                        <div class="search-engine-head">
+                            <strong class="search-engine-tit">选择您的默认搜索引擎：</strong>
+                            <div class="search-engine-tool">
+                                搜索热词：<label class="switch">
+                                    <input id="hot-btn" type="checkbox">
+                                    <div class="slider round"></div>
+                                </label>
+                            </div>
+                        </div>
+                        <ul class="search-engine-list"></ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+
+<script src=" ./js/search.min.js"> </script>
+<script src=" ./js/jsonload.js"> </script>
+</html>
